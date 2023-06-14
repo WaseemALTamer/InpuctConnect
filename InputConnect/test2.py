@@ -1,5 +1,7 @@
-import screeninfo
+from screeninfo import get_monitors
 
 
-monitor_count = len(screeninfo.get_monitors())
-print("Number of monitors:", monitor_count)
+monitor = get_monitors()[0]
+screen_width = monitor.width
+screen_height = monitor.height
+print(f"{screen_width} * {screen_height}")

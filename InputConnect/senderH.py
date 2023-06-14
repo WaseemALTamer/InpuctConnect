@@ -33,6 +33,7 @@ def main(FPS,display):
                 #message = image.convert(image.get()[0])
                 sock.sendall(message)
                 fps += 1
+                pygame.time.wait(3)
                 #pygame.time.wait(5)
             except OSError as e:
                 print(f'An error occurred: {e}')

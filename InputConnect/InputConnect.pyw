@@ -14,6 +14,7 @@ import resiver
 import sender
 import image
 import time
+import Mshift
 
 
 
@@ -63,7 +64,7 @@ def mouse_controller():
     ip4.config(state='readonly',fg="gray")
     mouse_port_entery.config(state='readonly',fg="gray")
     while Mcontroller_state and STATE:
-        Mmouse.main(mouse_locker_boolen,True)
+        Mmouse.main(mouse_locker_boolen,Mshift.shift)
     mouse_port_entery.config(state='normal',fg="black")
     if Kcontroller_state == False and Mcontroller_state == False and display_sender_state == False:
         ip1.config(state='normal',fg="black")
@@ -248,6 +249,13 @@ def keys_absorber():
         keybourd_absorber_button.configure(text="ALREADY ON",bg="yellow")
         root.after(16,key_absorber_state_button)
 
+def mouse_shifter():
+    if Mshift.state == False:
+        Mshift.state = True
+        Mshift.main()
+    if Mshift.state == True:
+        return None
+        
 
 def display_thead_increase():
     global display_theads_count
@@ -487,6 +495,8 @@ def window():
     mouse_detection_button.place(x=50,y=550)
     mouse_controller_button.place(x=50,y=600)
     mouse_locker_checkbox.place(x=50,y=635)
+    if monitor_count != 0:
+        mouse_shift_button.place(x=75,y=500)
     ##keybourd
     keybourd_titel.place(x=520,y=300)
     keybourd_port_label.place(x=520,y=370)
@@ -559,6 +569,7 @@ mouse_locker_checkbox = tk.Checkbutton(root,text="MOUSE LOCKER",bg="#1F1F1F",fg=
 mouse_locker_checkbox.bind("<Enter>", lambda event: on_hover(event, 200, 590))
 mouse_locker_checkbox.bind("<Leave>", out_hover)
 mouse_locker_boolen = False
+mouse_shift_button = tk.Button(root,text="SHIFT",width=20,height=0,bg="gray",command=mouse_shifter)
 ##keybourd
 keybourd_titel = tk.Label(root,text="KEYBOURD",font=14,bg="#1F1F1F",fg="gray")
 keybourd_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
@@ -610,7 +621,7 @@ display_FPS_lable.bind("<Enter>", lambda event: on_hover(event, 960, 430))
 display_FPS_lable.bind("<Leave>", out_hover)
 display_FPS_entry.bind("<Enter>", lambda event: on_hover(event, 960, 430))
 display_FPS_entry.bind("<Leave>", out_hover)
-display_monitor_lable = tk.Label(root,text="MONITORS",font=14,bg="#1F1F1F",fg="gray")
+display_monitor_lable = tk.Label(root,text="MONITOR",font=14,bg="#1F1F1F",fg="gray")
 display_monitor_button_forward = tk.Button(root,text=">",command=display_monitor_button_forward_fun,bg="gray")
 display_monitor_button_backward = tk.Button(root,text="<",command=display_monitor_button_backward_fun,bg="gray")
 display_monitor_target = 0
