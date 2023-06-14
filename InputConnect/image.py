@@ -7,6 +7,7 @@ import time
 import io
 
 
+global camera
 
 video_runing = False
 

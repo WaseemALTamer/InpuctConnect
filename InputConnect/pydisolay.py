@@ -14,7 +14,7 @@ display_width = monitor.width
 display_height = monitor.height
 
 def display(photo_data):
-    global window, timer, fps, display_width, display_height
+    global window, timer, fps, display_width, display_height, data
     if time.time() > timer:
         print(fps)
         fps = 0
@@ -25,7 +25,10 @@ def display(photo_data):
         resized_image = pygame.transform.scale(image, (display_width , display_height))
         window.blit(resized_image, (0, 0))
         pygame.display.update()
-        fps += 1
+        if data != photo_data:
+            fps += 1
+        else:
+            pass
     except:
         pass
 
@@ -36,7 +39,7 @@ def run(photo_data):
         window = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
         state = True
     if photo_data == data:
-        pygame.display.update()
+        display(photo_data)
     else:
         display(photo_data)
     for event in pygame.event.get():

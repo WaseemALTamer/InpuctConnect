@@ -8,6 +8,7 @@ import senderH
 import detectorH
 import Mmouse
 import socket
+import screeninfo
 import threading
 import resiver
 import sender
@@ -23,12 +24,11 @@ root.title("InputConnect")
 root.iconbitmap("images/icone.ico")
 root.resizable(width=False, height=False)
 root.configure(bg="#1F1F1F")
-
-STATE = True
 host = socket.gethostbyname(socket.gethostname())
+monitor_count = len(screeninfo.get_monitors())
 
 hover = False
-
+STATE = True
 
 time_hover = time.time() + 1
 
@@ -54,17 +54,13 @@ def mouse_detection():
     while Mdetection_state and STATE:
         Mdetector.main()
     mouse_port_entery.config(state='normal',fg="black")
+
 def mouse_controller():
     global Mcontroller_state,Kcontroller_state,display_sender_state,STATE, mouse_locker_boolen
     ip1.config(state='readonly',fg="gray")
     ip2.config(state='readonly',fg="gray")
     ip3.config(state='readonly',fg="gray")
     ip4.config(state='readonly',fg="gray")
-    fps_local = mouse_port_entery.get()
-    try:
-        fps_local = int(fps_local)
-    except:
-        return None
     mouse_port_entery.config(state='readonly',fg="gray")
     while Mcontroller_state and STATE:
         Mmouse.main(mouse_locker_boolen,True)
@@ -74,12 +70,14 @@ def mouse_controller():
         ip2.config(state='normal',fg="black")
         ip3.config(state='normal',fg="black")
         ip4.config(state='normal',fg="black")
+        
 def keybourd_detection():
     global Kdetection_state,STATE
     keybourd_port_entery.config(state='readonly',fg="gray")
     while STATE and Kdetection_state:
         Kdetector.main()
     keybourd_port_entery.config(state='normal',fg="black")
+
 def keybourd_controller():
     global Mcontroller_state,Kcontroller_state,display_sender_state,STATE
     ip1.config(state='readonly',fg="gray")
@@ -106,29 +104,29 @@ def display_resiver():
     detectorH.state = False
 
 def display_sender():
-    global Mcontroller_state,Kcontroller_state,display_sender_state,STATE,display_preformence_boolen
+    global Mcontroller_state,Kcontroller_state,display_sender_state,STATE,display_preformence_boolen,display_monitor_target
     ip1.config(state='readonly',fg="gray")
     ip2.config(state='readonly',fg="gray")
     ip3.config(state='readonly',fg="gray")
     ip4.config(state='readonly',fg="gray")
     display_FPS_entry.config(state='readonly',fg="gray")
     display_port_entery.config(state='readonly',fg="gray")
-    fps_local = FPS_chcker()
-    if fps_local == None:
-        return None
     while STATE and display_sender_state:
-        senderH.main(fps_local,0)
+        senderH.main(FPS_chcker(),display_monitor_target)
     display_port_entery.config(state='normal',fg="black")
     if Kcontroller_state == False and Mcontroller_state == False and display_sender_state == False:
         ip1.config(state='normal',fg="black")
         ip2.config(state='normal',fg="black")
         ip3.config(state='normal',fg="black")
         ip4.config(state='normal',fg="black")
-        display_FPS_entry.config(state='normal',fg="black")
+    display_FPS_entry.config(state='normal',fg="black")
     senderH.state = False
     display_sender_state = False
-    image.stopcam()
     image.video_runing = False
+    try:
+        image.stopcam()
+    except:
+        pass
 
 def lunch_mouse_detector():
     global Mdetection_state,host
@@ -211,6 +209,10 @@ def lunch_display_sender():
     global display_sender_state,display_theads_count
     senderH.ip = ip_checker()
     senderH.port = port_checker(display_port_entery.get(),"display_port_checker")
+    fps_local = FPS_chcker()
+    if fps_local == None:
+        display_sender_state = False
+        return None
     if senderH.ip == None or senderH.port == None:
         display_sender_state = False
         display_controller_button.configure(text="SENDER",bg="gray")
@@ -268,6 +270,18 @@ def display_thead_decrease():
         display_theads_count_label.configure(fg="green")
     display_theads_count_label.configure(text=f"{display_theads_count}")
 
+def display_monitor_button_forward_fun():
+    global monitor_count, display_monitor_target
+    if monitor_count - 1 > display_monitor_target:
+        display_monitor_target += 1
+    display_monitor_target_label.config(text=f"{display_monitor_target}")
+
+def display_monitor_button_backward_fun():
+    global monitor_count, display_monitor_target
+    if display_monitor_target > 0:
+        display_monitor_target -= 1
+    display_monitor_target_label.config(text=f"{display_monitor_target}")
+
 def display_box_boolen():
     global display_preformence_boolen, display_sender_state, display_theads_count
     display_preformence_boolen = not display_preformence_boolen
@@ -285,7 +299,7 @@ def display_box_boolen():
         display_controller_button.configure(text="SENDER",bg="gray")
         display_theads_count = 1
         display_theads_count_label.configure(text=f"{display_theads_count}")
-    
+
 
 def mouse_box_bollen():
     global mouse_locker_boolen
@@ -306,7 +320,7 @@ def FPS_chcker():
         display_FPS_lable.config(bg="#1F1F1F",fg="gray")
         return int(fpslocal)
     except:
-        display_FPS_lable.config(text="IP: ERROR", bg="dark red")
+        display_FPS_lable.config(text="FPS", bg="dark red")
         return None
     
 def port_checker(gateway,name):
@@ -454,6 +468,7 @@ def out_hover(event):
 
 
 def window():
+    global monitor_count
     ##general
     image_background.place(x=0,y=0)
     your_ip.place(x=520,y=0)
@@ -471,7 +486,7 @@ def window():
     #mouse_port_sub.place(x=50,y=430)
     mouse_detection_button.place(x=50,y=550)
     mouse_controller_button.place(x=50,y=600)
-    mouse_locker_checkbox.place(x=50,y=630)
+    mouse_locker_checkbox.place(x=50,y=635)
     ##keybourd
     keybourd_titel.place(x=520,y=300)
     keybourd_port_label.place(x=520,y=370)
@@ -494,6 +509,11 @@ def window():
     #display_preformence_checkbox.place(x=990,y=630)
     display_FPS_entry.place(x=1035,y=590)
     display_FPS_lable.place(x=990,y=590)
+    if monitor_count > 1:
+        display_monitor_lable.place(x=1000,y=430+35)
+        display_monitor_button_backward.place(x=1110,y=430+35)
+        display_monitor_button_forward.place(x=1170,y=430+35)
+        display_monitor_target_label.place(x=1135,y=425+35)
 
 def track_mouse_position(event):
     x = event.x
@@ -590,6 +610,12 @@ display_FPS_lable.bind("<Enter>", lambda event: on_hover(event, 960, 430))
 display_FPS_lable.bind("<Leave>", out_hover)
 display_FPS_entry.bind("<Enter>", lambda event: on_hover(event, 960, 430))
 display_FPS_entry.bind("<Leave>", out_hover)
+display_monitor_lable = tk.Label(root,text="MONITORS",font=14,bg="#1F1F1F",fg="gray")
+display_monitor_button_forward = tk.Button(root,text=">",command=display_monitor_button_forward_fun,bg="gray")
+display_monitor_button_backward = tk.Button(root,text="<",command=display_monitor_button_backward_fun,bg="gray")
+display_monitor_target = 0
+display_monitor_target_label = tk.Label(root,text=f"{display_monitor_target}",font=("Arial", 18),bg="#1F1F1F",fg="gray")
+
 ##hovering
 pannal = ImageTk.PhotoImage(Image.open("images/pannal.png").resize((int(1283/3),int(722/3))))
 pannal2 = ImageTk.PhotoImage(Image.open("images/pannal2.png").resize((int(1283/3),int(722/3))))
