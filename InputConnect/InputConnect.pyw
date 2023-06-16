@@ -495,8 +495,12 @@ def window():
     mouse_detection_button.place(x=50,y=550)
     mouse_controller_button.place(x=50,y=600)
     mouse_locker_checkbox.place(x=50,y=635)
-    if monitor_count != 0:
-        mouse_shift_button.place(x=75,y=500)
+    mouse_shift_button.place(x=75,y=500)
+    exclamation_image_mouse_port.place(x=250,y=375)
+    exclamation_image_mouse_shift.place(x=230,y=505)
+    exclamation_image_mouse_detect.place(x=260,y=555)
+    exclamation_image_mouse_control.place(x=260,y=605)
+    exclamation_image_mouse_checkbox.place(x=165,y=640)
     ##keybourd
     keybourd_titel.place(x=520,y=300)
     keybourd_port_label.place(x=520,y=370)
@@ -517,7 +521,7 @@ def window():
     display_theads_right.place(x=1170,y=430+80)
     display_theads_left.place(x=1110,y=430+80)
     #display_preformence_checkbox.place(x=990,y=630)
-    display_FPS_entry.place(x=1035,y=590)
+    display_FPS_entry.place(x=1050,y=590)
     display_FPS_lable.place(x=990,y=590)
     if monitor_count > 1:
         display_monitor_lable.place(x=1000,y=430+35)
@@ -632,10 +636,21 @@ pannal = ImageTk.PhotoImage(Image.open("images/pannal.png").resize((int(1283/3),
 pannal2 = ImageTk.PhotoImage(Image.open("images/pannal2.png").resize((int(1283/3),int(722/3))))
 pannal3 = ImageTk.PhotoImage(Image.open("images/pannal3.png").resize((int(1283/3),int(722/3))))
 pannal4 = ImageTk.PhotoImage(Image.open("images/pannal4.png").resize((int(1283/3),int(722/3))))
+exclamation = ImageTk.PhotoImage(Image.open("images/exclamation.png").resize((int(15),int(15))))
+
 image_panal = tk.Label(root, image=pannal, highlightthickness=0, bd=0)
 image_panal2 = tk.Label(root, image=pannal2, highlightthickness=0, bd=0)
 image_panal3 = tk.Label(root, image=pannal3, highlightthickness=0, bd=0)
 image_panal4 = tk.Label(root, image=pannal4, highlightthickness=0, bd=0,)
+
+exclamation_image_mouse_port = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+exclamation_image_mouse_shift = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+exclamation_image_mouse_detect = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+exclamation_image_mouse_control = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+exclamation_image_mouse_checkbox = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+
+
+
 
 #mapping
 map = {"mouse_port_checker" : mouse_port_label,

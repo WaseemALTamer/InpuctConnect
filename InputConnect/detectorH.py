@@ -15,19 +15,20 @@ timer2 = time.time() + 2
 
 
 def window():
-    global timer, state, photo
+    global timer, state, photo,state
     while state:
+        pygame.time.wait(10)
         #if time.time() > timer:
             #timer = time.time() + 1
             #print(fps)
         try:
             pydisolay.run(photo)
-            pygame.time.wait(3)
+            
         except:
             #with open("images/range.jpg", 'rb') as f:
                 #pydisolay.run(f.read())
-            pygame.time.wait(3)
-    pydisolay.state = False
+                pass
+    state = False
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.settimeout(2)
@@ -37,13 +38,14 @@ checker = []
 
 def main():
     global timer, fps, photo, sock, state, thread, checker, port, once, timer2
-
     if state == True and once == False:
         server_address = (socket.gethostname(), port)
         sock.bind(server_address)
-        for i in range (0, thread):
+        state = True
+        for i in range (0, int(thread)):
             threading.Thread(target=window).start()
         once = True
+        
     while state:
         try:
             sock.listen(1)

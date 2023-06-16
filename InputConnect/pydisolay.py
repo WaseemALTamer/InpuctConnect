@@ -35,13 +35,10 @@ def display(photo_data):
 def run(photo_data):
     global state, window, data, display_width, display_height
     if photo_data != b"" and state == False:
+        state = True
         pygame.init()
         window = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
-        state = True
-    if photo_data == data:
-        display(photo_data)
-    else:
-        display(photo_data)
+    display(photo_data)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pass
