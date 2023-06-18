@@ -37,70 +37,73 @@ def main(mouseLock,shift):
         if time.time() > timer:
             timer = time.time() + 1
             locker = not locker
+    try:
+        if mouseLock == False or locker == False:
+            if position != Functions.position():
+                position = Functions.position()
+                if shift == 0:    
+                    try:
+                        cor = f"{position[0]},{position[1]}S"
+                        sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
+                    except:
+                        pass
 
-    if mouseLock == False or locker == False:
-        if position != Functions.position():
+                if position[0] <= 0 and shift == 1:
+                    try:
+                        cor = f"{screen_width + position[0]},{position[1]}S"
+                        sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
+                    except:
+                        pass
+
+                if position[0] >= screen_width and shift == 2:
+                    try:
+                        cor = f"{position[0] - screen_width},{position[1]}S"
+                        sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
+                    except:
+                        pass
+
+                if position[1] <= 0 and shift == 3:
+                    try:
+                        cor = f"{position[0]},{1080 + position[1]}S"
+                        sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
+                    except:
+                        pass
+
+                if position[1] >= screen_height and shift == 4:     
+                    try:
+                        cor = f"{position[0]},{position[1] - screen_height}S"
+                        sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
+                    except:
+                        pass
+                
+
+        if mouseLock == True and locker == True:
             position = Functions.position()
-            if shift == 0:
-                cor = f"{position[0]},{position[1]}S"
-                try:
-                    sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
-                except:
-                    pass
-
-            if position[0] <= 0 and shift == 1:
-                cor = f"{screen_width + position[0]},{position[1]}S"
-                try:
-                    sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
-                except:
-                    pass
-
-            if position[0] >= screen_width and shift == 2:
-                cor = f"{position[0] - screen_width},{position[1]}S"
-                try:
-                    sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
-                except:
-                    pass
-
-            if position[1] <= 0 and shift == 3:
-                cor = f"{position[0]},{1080 + position[1]}S"
-                try:
-                    sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
-                except:
-                    pass
-
-            if position[1] >= screen_height and shift == 4:
-                cor = f"{position[0]},{position[1] - screen_height}S"
-                try:
-                    sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
-                except:
-                    pass
-            
-
-    if mouseLock == True and locker == True:
-        position = Functions.position()
-        cor = f"{position[0]-int(screen_width/2)},{position[1]-int(screen_height/2)}M"
-        try:
-            sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
-            Functions.move_mouse(screen_width//2,screen_height//2)
-        except:
-            pass
-    if Functions.left != left:
-        try:
-            if left == True:
-                sock.sendto("Lr".encode(), (UDP_IP, UDP_PORT))
-            else:
-                sock.sendto("Lp".encode(), (UDP_IP, UDP_PORT))     
-        except:
-            pass
-        left = Functions.left
-    if Functions.right != right:
-        try:
-            if right == True:
-                sock.sendto("Rr".encode(), (UDP_IP, UDP_PORT))
-            else:
-                sock.sendto("Rp".encode(), (UDP_IP, UDP_PORT))
-        except:
-            pass
-        right = Functions.right
-    pygame.time.wait(3)
+            cor = f"{position[0]-int(screen_width/2)},{position[1]-int(screen_height/2)}M"
+            try:
+                sock.sendto(cor.encode(), (UDP_IP, UDP_PORT))
+                Functions.move_mouse(screen_width//2,screen_height//2)
+            except:
+                pass
+        if Functions.left != left:
+            try:
+                if left == True:
+                    sock.sendto("Lr".encode(), (UDP_IP, UDP_PORT))
+                else:
+                    sock.sendto("Lp".encode(), (UDP_IP, UDP_PORT))     
+            except:
+                pass
+            left = Functions.left
+        if Functions.right != right:
+            try:
+                if right == True:
+                    sock.sendto("Rr".encode(), (UDP_IP, UDP_PORT))
+                else:
+                    sock.sendto("Rp".encode(), (UDP_IP, UDP_PORT))
+            except:
+                pass
+            right = Functions.right
+        pygame.time.wait(3)
+    
+    except:
+        pass

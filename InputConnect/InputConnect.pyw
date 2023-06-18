@@ -1,3 +1,5 @@
+from pystray import MenuItem as item
+from tkinter import *
 from PIL import Image, ImageTk
 import tkinter as tk
 import keyabsorber
@@ -10,17 +12,17 @@ import Mmouse
 import socket
 import screeninfo
 import threading
+import pydisolay
 import resiver
 import sender
 import image
 import time
 import Mshift
-
+import pystray
 
 
 
 root = tk.Tk()
-root.geometry("1280x720")
 root.title("InputConnect")
 root.iconbitmap("images/icone.ico")
 root.resizable(width=False, height=False)
@@ -48,6 +50,33 @@ Mcontroller_state = False
 ###display
 display_sender_state = False
 display_detector_state = False
+
+def quit_window(icon, item):
+    icon.stop()
+    root.destroy()
+
+
+def show_window(icon, item):
+    icon.stop()
+    root.after(0,root.deiconify)
+
+def item_lunch_absorber(icon, item):
+    icon.stop()
+    root.after(0,root.deiconify)
+    #keyabsorber.main(Mcontroller_state)
+
+def hide_window():
+    root.withdraw()
+    image = Image.open("images/icone.ico")
+    menu = (item('Show', show_window),item('Quit', quit_window))
+    icon = pystray.Icon("InputConnect", image, "InputConnect", menu)
+    icon.run()
+
+
+def clear_window(window):
+    for widget in window.winfo_children():
+        widget.place_forget()
+
 
 def mouse_detection():
     global Mdetection_state,STATE
@@ -103,6 +132,7 @@ def display_resiver():
         detectorH.main()
     display_port_entery.config(state='normal',fg="black")
     detectorH.state = False
+    pydisolay.state = False
 
 def display_sender():
     global Mcontroller_state,Kcontroller_state,display_sender_state,STATE,display_preformence_boolen,display_monitor_target
@@ -130,7 +160,7 @@ def display_sender():
         pass
 
 def lunch_mouse_detector():
-    global Mdetection_state,host
+    global Mdetection_state, host, page
     Mdetector.UDP_IP = host
     Mdetector.UDP_PORT = port_checker(mouse_port_entery.get(),"mouse_port_checker")
     if Mdetector.UDP_PORT == None or Mdetector.UDP_IP == None:
@@ -139,13 +169,18 @@ def lunch_mouse_detector():
         return None
     Mdetection_state = not Mdetection_state
     threading.Thread(target=mouse_detection).start()
+    if page > 0:
+        page = 0
+        window1()
+    if page == 0:
+        window1()
     if Mdetection_state == True:
         mouse_detection_button.configure(text="STOP" ,bg="red")
     else:
         mouse_detection_button.configure(text="DETECT",bg="gray")
 
 def lunch_mouse_controller():
-    global Mcontroller_state
+    global Mcontroller_state, page
     Mmouse.UDP_IP = ip_checker()
     Mmouse.UDP_PORT = port_checker(mouse_port_entery.get(),"mouse_port_checker")
     if Mmouse.UDP_PORT == None or Mmouse.UDP_IP == None:
@@ -154,13 +189,18 @@ def lunch_mouse_controller():
         return None
     Mcontroller_state = not Mcontroller_state
     threading.Thread(target=mouse_controller).start()
+    if page > 0:
+        page = 0
+        window1()
+    if page == 0:
+        window1()
     if Mcontroller_state == True:
         mouse_controller_button.configure(text="STOP" ,bg="red")
     else:
         mouse_controller_button.configure(text="CONTROLL",bg="gray")
 
 def lunch_keybourd_detector():
-    global Kdetection_state, host
+    global Kdetection_state, host, page
     Kdetector.UDP_IP = host
     Kdetector.UDP_PORT = port_checker(keybourd_port_entery.get(),"keybourd_port_checker")
     if Kdetector.UDP_IP == None or Kdetector.UDP_PORT == None:
@@ -169,13 +209,18 @@ def lunch_keybourd_detector():
         return None
     Kdetection_state = not Kdetection_state
     threading.Thread(target=keybourd_detection).start()
+    if page > 0:
+        page = 0
+        window1()
+    if page == 0:
+        window1()
     if Kdetection_state == True:
         keybourd_detection_button.configure(text="STOP" ,bg="red")
     else:
         keybourd_detection_button.configure(text="DETECT",bg="gray")
 
 def lunch_keybourd_controller():
-    global Kcontroller_state
+    global Kcontroller_state, page
     Kcontroller.UDP_IP = ip_checker()
     Kcontroller.UDP_PORT = port_checker(keybourd_port_entery.get(),"keybourd_port_checker")
     if Kcontroller.UDP_IP == None or Kcontroller.UDP_PORT == None:
@@ -184,6 +229,11 @@ def lunch_keybourd_controller():
         return None
     Kcontroller_state = not Kcontroller_state
     threading.Thread(target=keybourd_controller).start()
+    if page > 0:
+        page = 0
+        window1()
+    if page == 0:
+        window1()
     if Kcontroller_state == True:
         keybourd_controller_button.configure(text="STOP" ,bg="red")
     else:
@@ -191,7 +241,7 @@ def lunch_keybourd_controller():
 
 
 def lunch_display_detector():
-    global display_detector_state,host
+    global display_detector_state, host, page
     detectorH.port = port_checker(display_port_entery.get(),"display_port_checker")
     if  detectorH.port == None:
         display_detector_state = False
@@ -200,6 +250,11 @@ def lunch_display_detector():
     display_detector_state = not display_detector_state
     detectorH.state = True
     threading.Thread(target=display_resiver).start()
+    if page > 0:
+        page = 0
+        window1()
+    if page == 0:
+        window1()
     if display_detector_state == True:
         display_detection_button.configure(text="STOP",bg="red")
     else:
@@ -207,7 +262,7 @@ def lunch_display_detector():
         detectorH.state = False
 
 def lunch_display_sender():
-    global display_sender_state,display_theads_count
+    global display_sender_state, display_theads_count, page
     senderH.ip = ip_checker()
     senderH.port = port_checker(display_port_entery.get(),"display_port_checker")
     fps_local = FPS_chcker()
@@ -220,6 +275,11 @@ def lunch_display_sender():
         return None
     display_sender_state = not display_sender_state
     threading.Thread(target=display_sender).start()
+    if page > 0:
+        page = 0
+        window1()
+    if page == 0:
+        window1()
     if display_sender_state == True:
         display_controller_button.configure(text="STOP",bg="red")
     else:
@@ -376,84 +436,88 @@ def port_checker(gateway,name):
     mouse_port_label.config(bg="#1F1F1F")
     keybourd_port_label.config(bg="#1F1F1F")
     display_port_label.config(bg="#1F1F1F")
+    save_on_text()
     return gateway
 
 
 
 def on_hover_timer(x,y):
-    global hover, time_hover
-    if hover == True:
-        if time.time() > time_hover:
-            if hover == True:
-                if y >= 380:
-                    if x >= 900:
-                        image_panal4.place(x=x-420,y=y)
-                        if x == 960 and y == 380:
-                            display_detection_message.place(x=x-400,y=y+20)
+    global hover, time_hover, page
+    if page == -1:
+        if hover == True:
+            if time.time() > time_hover:
+                if hover == True:
+                    if y >= 380:
+                        if x >= 900:
+                            image_panal4.place(x=x-420,y=y)
+                            if x == 960 and y == 380:
+                                display_detection_message.place(x=x-400,y=y+20)
+                                return None
+                            if x == 960 and y == 430:
+                                display_sender_message.place(x=x-400,y=y+20)
+                                return None
+                            if x == 960 and y == 460:
+                                display_prefomence_message.place(x=x-400,y=y+20)
+                                return None
                             return None
-                        if x == 960 and y == 430:
-                            display_sender_message.place(x=x-400,y=y+20)
+                        else:
+                            image_panal3.place(x=x,y=y-120)
+                            if x == 260 and y == 500:
+                                mouse_detection_message.place(x=x+55,y=y-95)
+                                return None
+                            if x == 260 and y == 550:
+                                mouse_conrtoller_message.place(x=x+55,y=y-95)
+                                return None
+                            if x == 200 and y == 590:
+                                mouse_checkbox_message.place(x=x+55,y=y-95)
+                                return None
+                            if x == 740 and y == 500:
+                                keybourd_detection_message.place(x=x+55,y=y-95)
+                                return None
+                            if x == 740 and y == 550:
+                                keyrboud_conrtoller_message.place(x=x+55,y=y-95)
+                                return None
+                            if x == 740 and y == 600:
+                                keybourd_absorber_message.place(x=x+55,y=y-95)
+                                return None
                             return None
-                        if x == 960 and y == 460:
-                            display_prefomence_message.place(x=x-400,y=y+20)
-                            return None
-                        return None
                     else:
-                        image_panal3.place(x=x,y=y-120)
-                        if x == 260 and y == 500:
-                            mouse_detection_message.place(x=x+55,y=y-95)
+                        if x >= 900:
+                            if x == 980 and y == 350:
+                                image_panal4.place(x=560,y=340)
+                                display_theads_message.place(x=x-400, y=y + 10)
+                                return None
+                            if x == 740 and y == 600:
+                                image_panal4.place(x=x,y=y)
+                                keybourd_absorber_message.place(x=x,y=y-95)
+                                return None
+                            image_panal2.place_forget()
+                            image_panal2.place(x=x-420,y=y)
+                            port_message.place(x=x-400,y=y+30)
                             return None
-                        if x == 260 and y == 550:
-                            mouse_conrtoller_message.place(x=x+55,y=y-95)
+                        else:
+                            image_panal.place_forget()
+                            image_panal.place(x=x,y=y)
+                            if y == 350:
+                                port_message.place(x=x+60,y=y+30)
+                                return None
+                            if y == 90:
+                                ip_message.place(x=x+60,y=y+30)
+                                return None
                             return None
-                        if x == 200 and y == 590:
-                            mouse_checkbox_message.place(x=x+55,y=y-95)
-                            return None
-                        if x == 740 and y == 500:
-                            keybourd_detection_message.place(x=x+55,y=y-95)
-                            return None
-                        if x == 740 and y == 550:
-                            keyrboud_conrtoller_message.place(x=x+55,y=y-95)
-                            return None
-                        if x == 740 and y == 600:
-                            keybourd_absorber_message.place(x=x+55,y=y-95)
-                            return None
-                        return None
-                else:
-                    if x >= 900:
-                        if x == 980 and y == 350:
-                            image_panal4.place(x=560,y=340)
-                            display_theads_message.place(x=x-400, y=y + 10)
-                            return None
-                        if x == 740 and y == 600:
-                            image_panal4.place(x=x,y=y)
-                            keybourd_absorber_message.place(x=x,y=y-95)
-                            return None
-                        image_panal2.place_forget()
-                        image_panal2.place(x=x-420,y=y)
-                        port_message.place(x=x-400,y=y+30)
-                        return None
-                    else:
-                        image_panal.place_forget()
-                        image_panal.place(x=x,y=y)
-                        if y == 350:
-                            port_message.place(x=x+60,y=y+30)
-                            return None
-                        if y == 90:
-                            ip_message.place(x=x+60,y=y+30)
-                            return None
-                        return None
-        root.after(16, lambda: on_hover_timer(x,y))
-    else:
-        return None
+            root.after(16, lambda: on_hover_timer(x,y))
+        else:
+            return None
 
 def on_hover(event,x,y):
     global hover, time_hover
+    return None
     hover = True
     time_hover = time.time() + 1
     root.after(16, lambda: on_hover_timer(x,y))
         
 def out_hover(event):
+    return None
     global hover
     image_panal.place_forget()
     image_panal2.place_forget()
@@ -475,11 +539,224 @@ def out_hover(event):
     hover = False
 
 
-def window():
+###### pages
+page = 0
+
+def advacned_mode_shift():
+    global page
+    if page >= 0:
+        page = -1
+        window_advance()
+    else:
+        page = 0
+        window1()
+
+def window_page_0(event):
+    global page
+    page = 0
+    window1()
+
+def keybourd_detection_page():
+    global page
+    page = 1
+    window1()
+    
+def keybourd_controller_page():
+    global page
+    page = 2
+    window1()
+
+def mouse_detection_page():
+    global page
+    page = 3
+    window1()
+    
+def mouse_controller_page():
+    global page
+    page = 4
+    window1()
+
+def display_resiver_page():
+    global page
+    page = 5
+    window1()
+
+def display_sender_page():
+    global page
+    page = 6
+    window1()
+
+
+def back_button_fun1(event):
+    image_back_button.config(image=back_button)
+
+
+def back_button_fun2(event):
+    image_back_button.config(image=back_button1)
+
+def qusetion__hover_over(argument):
+    if argument == 1:
+        image_qusetion_ip.config(image=qusetion2)
+    if argument == 2:
+        image_qusetion_mouse.config(image=qusetion2)
+    if argument == 3:
+        image_qusetion_keybourd.config(image=qusetion2)
+    if argument == 4:
+        image_qusetion_display.config(image=qusetion2)
+
+
+def qusetion__hover_exit(argument):
+    if argument == 1:
+        image_qusetion_ip.config(image=qusetion)
+    if argument == 2:
+        image_qusetion_mouse.config(image=qusetion)
+    if argument == 3:
+        image_qusetion_keybourd.config(image=qusetion)
+    if argument == 4:
+        image_qusetion_display.config(image=qusetion)
+
+
+
+
+
+def save_on_text():
+    temp = []
+    temp.append(ip1.get())
+    temp.append(ip2.get())
+    temp.append(ip3.get())
+    temp.append(ip4.get())
+    temp.append(mouse_port_entery.get())
+    temp.append(keybourd_port_entery.get())
+    temp.append(display_port_entery.get())
+    try:
+        with open("config.txt","w") as file:
+            for i in range(0,len(temp)):
+                file.write(str(temp[i]) + "\n")
+    except:
+        pass
+
+
+
+def window1():
+    global page,Kdetection_state ,Kcontroller_state, Mcontroller_state ,Mdetection_state ,display_detector_state , display_sender_state 
+    clear_window(root)
+    root.geometry("400x600")
+    advanced_mode_checkbox.place(x=0,y=570)
+
+
+    if page == 0:
+        keybourd_titel.place(x=40,y=60)
+        if Kdetection_state == True:
+            keybourd_detection_button.place(x=140,y=100)
+        elif Kcontroller_state == True:
+            keybourd_controller_button.place(x=140,y=140)
+            keybourd_absorber_button.place(x=170,y=170)
+        else:
+            keybourd_page_detection.place(x=50,y=100)
+            keybourd_page_control.place(x=140,y=140)
+
+        mouse_titel.place(x=40,y=240)
+        if Mdetection_state == True:
+            mouse_detection_button.place(x=140,y=270)
+        elif Mcontroller_state == True:
+            mouse_controller_button.place(x=140,y=270)
+            mouse_locker_checkbox.place(x=140,y=300)
+        else:
+            mouse_page_detection.place(x=50,y=280)
+            mouse_page_control.place(x=140,y=320)
+
+        display_titel.place(x=40,y=420)
+        if display_detector_state == True:
+            display_detection_button.place(x=140,y=450)
+        elif display_sender_state == True:
+            display_controller_button.place(x=140,y=450)
+        else:
+            display_page_resive.place(x=50,y=460)
+            display_page_sender.place(x=140,y=500)
+
+    if page == 1:
+        keybourd_titel.place(x=40,y=60)
+        your_ip.place(x=105,y=0)
+        keybourd_port_label.place(x=75,y=110)
+        keybourd_port_entery.place(x=75,y=140)
+        keybourd_detection_button.place(x=75,y=250)
+        image_back_button.place(x=3,y=3)
+
+
+    if page == 2:
+        keybourd_titel.place(x=40,y=60)
+        ip_label.place(x=75,y=110)
+        ip_postion_enterys = (75,140)
+        ip1.place(x=ip_postion_enterys[0]+60*0, y=ip_postion_enterys[1])
+        ip2.place(x=ip_postion_enterys[0]+60*1, y=ip_postion_enterys[1])
+        ip3.place(x=ip_postion_enterys[0]+60*2, y=ip_postion_enterys[1])
+        ip4.place(x=ip_postion_enterys[0]+60*3, y=ip_postion_enterys[1])
+        keybourd_port_label.place(x=75,y=210)
+        keybourd_port_entery.place(x=75,y=240)
+        keybourd_controller_button.place(x=75,y=300)
+        image_back_button.place(x=3,y=3)
+
+    if page == 3:
+        mouse_titel.place(x=40,y=60)
+        your_ip.place(x=105,y=0)
+        mouse_port_label.place(x=75,y=110)
+        mouse_port_entery.place(x=75,y=140)
+        mouse_detection_button.place(x=75,y=250)
+        image_back_button.place(x=3,y=3)
+
+    if page == 4:
+        mouse_titel.place(x=40,y=60)
+        ip_label.place(x=75,y=110)
+        ip_postion_enterys = (75,140)
+        ip1.place(x=ip_postion_enterys[0]+60*0, y=ip_postion_enterys[1])
+        ip2.place(x=ip_postion_enterys[0]+60*1, y=ip_postion_enterys[1])
+        ip3.place(x=ip_postion_enterys[0]+60*2, y=ip_postion_enterys[1])
+        ip4.place(x=ip_postion_enterys[0]+60*3, y=ip_postion_enterys[1])
+        mouse_port_label.place(x=75,y=210)
+        mouse_port_entery.place(x=75,y=240)
+        mouse_controller_button.place(x=75,y=300)
+        image_back_button.place(x=3,y=3)
+    
+    if page == 5:
+        display_titel.place(x=40,y=60)
+        your_ip.place(x=105,y=0)
+        display_port_label.place(x=75,y=110)
+        display_port_entery.place(x=75,y=140)
+        display_thread_label.place(x=1000-925,y=200)
+        display_theads_count_label.place(x=1135-925,y=195)
+        display_theads_right.place(x=1170-925,y=200)
+        display_theads_left.place(x=1110-925,y=200)
+        display_detection_button.place(x=75,y=250)
+        image_back_button.place(x=3,y=3) 
+
+    if page == 6:
+        display_titel.place(x=40,y=60)
+        ip_label.place(x=75,y=110)
+        ip_postion_enterys = (75,140)
+        ip1.place(x=ip_postion_enterys[0]+60*0, y=ip_postion_enterys[1])
+        ip2.place(x=ip_postion_enterys[0]+60*1, y=ip_postion_enterys[1])
+        ip3.place(x=ip_postion_enterys[0]+60*2, y=ip_postion_enterys[1])
+        ip4.place(x=ip_postion_enterys[0]+60*3, y=ip_postion_enterys[1])
+        display_port_label.place(x=75,y=210)
+        display_port_entery.place(x=75,y=240)
+        display_monitor_lable.place(x=1000-925,y=300)
+        display_monitor_button_backward.place(x=1110-925,y=300)
+        display_monitor_button_forward.place(x=1170-925,y=300)
+        display_monitor_target_label.place(x=1135-925,y=295)
+        display_FPS_lable.place(x=75,y=350)
+        display_FPS_entry.place(x=135,y=350)
+        display_controller_button.place(x=75,y=400)
+        image_back_button.place(x=3,y=3)
+
+
+def window_advance():
     global monitor_count
+    clear_window(root)
+    root.geometry("1280x720")
+    advanced_mode_checkbox.place(x=0,y=690)
     ##general
     image_background.place(x=0,y=0)
-    your_ip.place(x=520,y=0)
+    your_ip.place(x=540,y=0)
     ip_label.place(x=520,y=110)
     ip_postion_enterys = (520,140)
     ip1.place(x=ip_postion_enterys[0]+60*0, y=ip_postion_enterys[1])
@@ -496,11 +773,11 @@ def window():
     mouse_controller_button.place(x=50,y=600)
     mouse_locker_checkbox.place(x=50,y=635)
     mouse_shift_button.place(x=75,y=500)
-    exclamation_image_mouse_port.place(x=250,y=375)
-    exclamation_image_mouse_shift.place(x=230,y=505)
-    exclamation_image_mouse_detect.place(x=260,y=555)
-    exclamation_image_mouse_control.place(x=260,y=605)
-    exclamation_image_mouse_checkbox.place(x=165,y=640)
+    #exclamation_image_mouse_port.place(x=250,y=375)
+    #exclamation_image_mouse_shift.place(x=230,y=505)
+    #exclamation_image_mouse_detect.place(x=260,y=555)
+    #exclamation_image_mouse_control.place(x=260,y=605)
+    #exclamation_image_mouse_checkbox.place(x=165,y=640)
     ##keybourd
     keybourd_titel.place(x=520,y=300)
     keybourd_port_label.place(x=520,y=370)
@@ -523,11 +800,15 @@ def window():
     #display_preformence_checkbox.place(x=990,y=630)
     display_FPS_entry.place(x=1050,y=590)
     display_FPS_lable.place(x=990,y=590)
-    if monitor_count > 1:
-        display_monitor_lable.place(x=1000,y=430+35)
-        display_monitor_button_backward.place(x=1110,y=430+35)
-        display_monitor_button_forward.place(x=1170,y=430+35)
-        display_monitor_target_label.place(x=1135,y=425+35)
+    display_monitor_lable.place(x=1000,y=430+35)
+    display_monitor_button_backward.place(x=1110,y=430+35)
+    display_monitor_button_forward.place(x=1170,y=430+35)
+    display_monitor_target_label.place(x=1135,y=425+35)
+    
+    image_qusetion_ip.place(x=735,y=115)
+    image_qusetion_mouse.place(x=270,y=300)
+    image_qusetion_keybourd.place(x=740,y=300)
+    image_qusetion_display.place(x=1210,y=300)
 
 def track_mouse_position(event):
     x = event.x
@@ -539,7 +820,7 @@ def track_mouse_position(event):
 ##general
 background = ImageTk.PhotoImage(Image.open("images/background.png").resize((1280,720)))
 image_background = tk.Label(root, image=background, highlightthickness=0, bd=0,)
-your_ip = tk.Label(root,text=f"YOUR IP:{host}",font=18,bg="#695DFF",fg="#1F1F1F")
+your_ip = tk.Label(root,text=f"YOUR IP:{host}",font=18,bg="#E4AD3B",fg="#1F1F1F")
 ip_label = tk.Label(root,text = f"IP:CLIENT",font=14,bg="#1F1F1F",fg="gray") 
 ip1 = tk.Entry(root, width=4, font=('Arial', 14))
 ip1.bind("<Enter>", lambda event: on_hover(event, 760, 90))
@@ -574,6 +855,10 @@ mouse_locker_checkbox.bind("<Enter>", lambda event: on_hover(event, 200, 590))
 mouse_locker_checkbox.bind("<Leave>", out_hover)
 mouse_locker_boolen = False
 mouse_shift_button = tk.Button(root,text="SHIFT",width=20,height=0,bg="gray",command=mouse_shifter)
+
+mouse_page_detection = tk.Button(root,text="DETECT",width=18,height=0,bg="gray",command=mouse_detection_page)
+mouse_page_control = tk.Button(root,text="CONTROLLER",width=18,height=0,bg="gray",command=mouse_controller_page)
+
 ##keybourd
 keybourd_titel = tk.Label(root,text="KEYBOURD",font=14,bg="#1F1F1F",fg="gray")
 keybourd_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
@@ -590,6 +875,10 @@ keybourd_controller_button.bind("<Leave>", out_hover)
 keybourd_absorber_button = tk.Button(root,text="ABSORBER",width=28,height=0,bg="gray",command=keys_absorber)
 keybourd_absorber_button.bind("<Enter>", lambda event: on_hover(event, 740, 600))
 keybourd_absorber_button.bind("<Leave>", out_hover)
+keybourd_page_detection = tk.Button(root,text="DETECT",width=18,height=0,bg="gray",command=keybourd_detection_page)
+keybourd_page_control = tk.Button(root,text="CONTROLLER",width=18,height=0,bg="gray",command=keybourd_controller_page)
+
+
 ##display
 display_titel = tk.Label(root,text="DISPLAY",font=14,bg="#1F1F1F",fg="gray")
 display_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
@@ -630,6 +919,9 @@ display_monitor_button_forward = tk.Button(root,text=">",command=display_monitor
 display_monitor_button_backward = tk.Button(root,text="<",command=display_monitor_button_backward_fun,bg="gray")
 display_monitor_target = 0
 display_monitor_target_label = tk.Label(root,text=f"{display_monitor_target}",font=("Arial", 18),bg="#1F1F1F",fg="gray")
+display_page_resive = tk.Button(root,text="RECIVE",width=18,height=0,bg="gray",command=display_resiver_page)
+display_page_sender = tk.Button(root,text="SEND",width=18,height=0,bg="gray",command=display_sender_page)
+
 
 ##hovering
 pannal = ImageTk.PhotoImage(Image.open("images/pannal.png").resize((int(1283/3),int(722/3))))
@@ -637,19 +929,62 @@ pannal2 = ImageTk.PhotoImage(Image.open("images/pannal2.png").resize((int(1283/3
 pannal3 = ImageTk.PhotoImage(Image.open("images/pannal3.png").resize((int(1283/3),int(722/3))))
 pannal4 = ImageTk.PhotoImage(Image.open("images/pannal4.png").resize((int(1283/3),int(722/3))))
 exclamation = ImageTk.PhotoImage(Image.open("images/exclamation.png").resize((int(15),int(15))))
+back_button = ImageTk.PhotoImage(Image.open("images/backbutton.png").resize((int(50),int(50))))
+back_button1 = ImageTk.PhotoImage(Image.open("images/backbutton2.png").resize((int(50),int(50))))
+qusetion = ImageTk.PhotoImage(Image.open("images/qusetion.png").resize((int(10),int(15))))
+qusetion2 = ImageTk.PhotoImage(Image.open("images/qusetion2.png").resize((int(10),int(15))))
 
 image_panal = tk.Label(root, image=pannal, highlightthickness=0, bd=0)
 image_panal2 = tk.Label(root, image=pannal2, highlightthickness=0, bd=0)
 image_panal3 = tk.Label(root, image=pannal3, highlightthickness=0, bd=0)
 image_panal4 = tk.Label(root, image=pannal4, highlightthickness=0, bd=0,)
 
-exclamation_image_mouse_port = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
-exclamation_image_mouse_shift = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
-exclamation_image_mouse_detect = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
-exclamation_image_mouse_control = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
-exclamation_image_mouse_checkbox = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+image_qusetion_ip = tk.Label(root, image=qusetion, highlightthickness=0, bd=0,)
+image_qusetion_ip.bind("<Enter>",lambda event: qusetion__hover_over(1))
+image_qusetion_ip.bind("<Leave>",lambda event: qusetion__hover_exit(1))
+
+image_qusetion_mouse = tk.Label(root, image=qusetion, highlightthickness=0, bd=0,)
+image_qusetion_mouse.bind("<Enter>",lambda event: qusetion__hover_over(2))
+image_qusetion_mouse.bind("<Leave>",lambda event: qusetion__hover_exit(2))
+
+image_qusetion_keybourd = tk.Label(root, image=qusetion, highlightthickness=0, bd=0,)
+image_qusetion_keybourd.bind("<Enter>",lambda event: qusetion__hover_over(3))
+image_qusetion_keybourd.bind("<Leave>",lambda event: qusetion__hover_exit(3))
+
+image_qusetion_display = tk.Label(root, image=qusetion, highlightthickness=0, bd=0,)
+image_qusetion_display.bind("<Enter>",lambda event: qusetion__hover_over(4))
+image_qusetion_display.bind("<Leave>",lambda event: qusetion__hover_exit(4))
 
 
+#exclamation_image_mouse_port = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+#exclamation_image_mouse_shift = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+#exclamation_image_mouse_detect = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+#exclamation_image_mouse_control = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+#exclamation_image_mouse_checkbox = tk.Label(root, image=exclamation, highlightthickness=0, bd=0,)
+
+####general_window1
+image_back_button = tk.Label(root, image=back_button1, bd=0,highlightthickness=0)
+image_back_button.bind("<ButtonRelease-1>", window_page_0)
+image_back_button.bind("<Enter>", back_button_fun1)
+image_back_button.bind("<Leave>", back_button_fun2)
+advanced_mode_checkbox = tk.Checkbutton(root,text="ADVANCED MODE",bg="#1F1F1F",fg="gray",selectcolor="#1F1F1F",activeforeground="gray",command=advacned_mode_shift)
+####storing
+
+
+
+try:
+    with open("config.txt", "r") as file:
+        lines = file.readlines()
+        lines = [line.strip() for line in lines]
+    ip1.insert(tk.END, str(lines[0]))
+    ip2.insert(tk.END, str(lines[1]))
+    ip3.insert(tk.END, str(lines[2]))
+    ip4.insert(tk.END, str(lines[3]))
+    mouse_port_entery.insert(tk.END, str(lines[4]))
+    keybourd_port_entery.insert(tk.END, str(lines[5]))
+    display_port_entery.insert(tk.END, str(lines[6]))
+except:
+    pass
 
 
 #mapping
@@ -703,8 +1038,13 @@ and the higher the FPS.""",bg="#323232",fg="yellow",anchor='e', justify='left')
 
 
 
-window()
+window1()
+
+
+root.protocol('WM_DELETE_WINDOW', hide_window)
+
 root.mainloop()
+
 STATE = False
 detectorH.state = False
 senderH.state = False
@@ -713,4 +1053,4 @@ Kcontroller_state = False
 Mcontroller_state = False
 Mdetection_state = False
 display_sender_state = False
-display_sender_state = False
+display_detector_state = False

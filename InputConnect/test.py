@@ -1,14 +1,15 @@
-import detectorH
-import senderH
-import threading
+import pystray
+from pystray import MenuItem as item
 
-def fun1():
-    detectorH.port = 9009
-    detectorH.main()
+# Define a function to be called when the tray icon is clicked
+def on_tray_click(icon, item):
+    print("Tray clicked!")
 
-def fun2():
-    senderH.port = 9009
-    senderH.ip = "192.168.1.173"
-    senderH.main()
+# Create a menu with a single item representing your application
+menu = (item('Open', on_tray_click),)
 
-threading.Thread(target=fun2).start()
+# Create the tray icon with the menu
+icon = pystray.Icon("images/icone.ico", menu)
+
+# Run the tray icon
+icon.run()
