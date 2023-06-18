@@ -171,6 +171,7 @@ def lunch_mouse_detector():
     threading.Thread(target=mouse_detection).start()
     if page > 0:
         page = -5
+        array_page.append(page)
         window1()
     if page <= 0:
         window1()
@@ -191,6 +192,7 @@ def lunch_mouse_controller():
     threading.Thread(target=mouse_controller).start()
     if page > 0:
         page = -5
+        array_page.append(page)
         window1()
     if page <= 0:
         window1()
@@ -211,6 +213,7 @@ def lunch_keybourd_detector():
     threading.Thread(target=keybourd_detection).start()
     if page > 0:
         page = -5
+        array_page.append(page)
         window1()
     if page <= 0:
         window1()
@@ -231,6 +234,7 @@ def lunch_keybourd_controller():
     threading.Thread(target=keybourd_controller).start()
     if page > 0:
         page = -5
+        array_page.append(page)
         window1()
     if page <= 0:
         window1()
@@ -252,6 +256,7 @@ def lunch_display_detector():
     threading.Thread(target=display_resiver).start()
     if page > 0:
         page = -5
+        array_page.append(page)
         window1()
     if page <= 0:
         window1()
@@ -277,6 +282,7 @@ def lunch_display_sender():
     threading.Thread(target=display_sender).start()
     if page > 0:
         page = -5
+        array_page.append(page)
         window1()
     if page <= 0:
         window1()
@@ -778,6 +784,7 @@ def window1():
     if page == -2:
         your_ip.place(x=105,y=0)
         display_titel.place(x=40,y=60)
+        image_qusetion_general_page.place(x=385,y=5)
         if display_detector_state == True:
             display_detection_button.place(x=140,y=450+200)
         elif display_sender_state == True:
@@ -946,27 +953,27 @@ def window_advance():
     keybourd_port_label.place(x=520,y=370)
     keybourd_port_entery.place(x=520,y=400)
     #keybourd_port_sub.place(x=520,y=430)
-    keybourd_detection_button.place(x=520,y=550)
-    keybourd_controller_button.place(x=520,y=600)
-    keybourd_absorber_button.place(x=520,y=650)
+    keybourd_detection_button.place(x=520,y=550-10)
+    keybourd_controller_button.place(x=520,y=600-10)
+    keybourd_absorber_button.place(x=520,y=650-10)
     ##display
     display_titel.place(x=990,y=300)
     display_port_label.place(x=990,y=370)
     display_port_entery.place(x=990,y=400)
     #display_port_sub.place(x=990,y=430)
-    display_detection_button.place(x=990,y=550)
-    display_controller_button.place(x=990,y=630)
-    display_thread_label.place(x=1000,y=430+80)
-    display_theads_count_label.place(x=1135,y=425+80)
-    display_theads_right.place(x=1170,y=430+80)
-    display_theads_left.place(x=1110,y=430+80)
+    display_detection_button.place(x=990,y=550-5)
+    display_controller_button.place(x=990,y=630-5)
+    display_thread_label.place(x=1000,y=430+80-5)
+    display_theads_count_label.place(x=1135,y=425+80-5)
+    display_theads_right.place(x=1170,y=430+80-5)
+    display_theads_left.place(x=1110,y=430+80-5)
     #display_preformence_checkbox.place(x=990,y=630)
-    display_FPS_entry.place(x=1050,y=590)
-    display_FPS_lable.place(x=990,y=590)
-    display_monitor_lable.place(x=1000,y=430+35)
-    display_monitor_button_backward.place(x=1110,y=430+35)
-    display_monitor_button_forward.place(x=1170,y=430+35)
-    display_monitor_target_label.place(x=1135,y=425+35)
+    display_FPS_entry.place(x=1050,y=590-5)
+    display_FPS_lable.place(x=990,y=590-5)
+    display_monitor_lable.place(x=1000,y=430+35-5)
+    display_monitor_button_backward.place(x=1110,y=430+35-5)
+    display_monitor_button_forward.place(x=1170,y=430+35-5)
+    display_monitor_target_label.place(x=1135,y=425+35-5)
     
     image_qusetion_ip.place(x=735,y=115)
     image_qusetion_mouse.place(x=270,y=300)
@@ -1003,7 +1010,7 @@ fps_counter_out = tk.Label(root,text=f"FPS:{sendeing_FPS}",font=14,bg="#1F1F1F",
 ###mouse
 mouse_titel = tk.Label(root,text="MOUSE",font=14,bg="#1F1F1F",fg="gray")
 mouse_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
-mouse_port_entery = tk.Entry(root,width=20,font=("Arial", 14))
+mouse_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 mouse_port_entery.bind("<Enter>", lambda event: on_hover(event, 290, 350))
 mouse_port_entery.bind("<Leave>", out_hover)
 mouse_port_sub = tk.Button(root,text="SUBMIT",width=20,height=0,bg="gray",command=lambda: port_checker(mouse_port_entery.get(),"mouse_port_checker"))
@@ -1025,7 +1032,7 @@ mouse_page_control = tk.Button(root,text="CONTROLLER",width=18,height=0,bg="gray
 ##keybourd
 keybourd_titel = tk.Label(root,text="KEYBOURD",font=14,bg="#1F1F1F",fg="gray")
 keybourd_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
-keybourd_port_entery = tk.Entry(root,width=20,font=("Arial", 14))
+keybourd_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 keybourd_port_entery.bind("<Enter>", lambda event: on_hover(event, 760, 350))
 keybourd_port_entery.bind("<Leave>", out_hover)
 keybourd_port_sub = tk.Button(root,text="SUBMIT",width=20,height=0,bg="gray",command=lambda: port_checker(keybourd_port_entery.get(),"keybourd_port_checker"))
@@ -1045,7 +1052,7 @@ keybourd_page_control = tk.Button(root,text="CONTROLLER",width=18,height=0,bg="g
 ##display
 display_titel = tk.Label(root,text="DISPLAY",font=14,bg="#1F1F1F",fg="gray")
 display_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
-display_port_entery = tk.Entry(root,width=20,font=("Arial", 14))
+display_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 display_port_entery.bind("<Enter>", lambda event: on_hover(event, 960, 350))
 display_port_entery.bind("<Leave>", out_hover)
 display_port_sub = tk.Button(root,text="SUBMIT",width=20,height=0,bg="gray",command=lambda: port_checker(display_port_entery.get(),"display_port_checker"))
