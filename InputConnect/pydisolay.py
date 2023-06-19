@@ -19,6 +19,7 @@ def display(photo_data):
         print(fps)
         fps = 0
         timer = time.time() + 1
+        
     try:
         image_data = io.BytesIO(photo_data)
         image = pygame.image.load(image_data)
@@ -38,6 +39,9 @@ def run(photo_data):
         state = True
         pygame.init()
         window = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
+        pygame.display.set_caption(f"Resiver")
+        icon = pygame.image.load('images\icone.png')  # Replace 'icon.png' with the path to your icon image
+        pygame.display.set_icon(icon)
     display(photo_data)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
