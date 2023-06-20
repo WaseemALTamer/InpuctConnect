@@ -1100,7 +1100,7 @@ mouse_page_detection = tk.Button(root,text="DETECT",width=18,height=0,bg="gray",
 mouse_page_control = tk.Button(root,text="CONTROLLER",width=18,height=0,bg="gray",command=mouse_controller_page)
 
 ##keybourd
-keybourd_titel = tk.Label(root,text="KEYBOURD",font=14,bg="#1F1F1F",fg="gray")
+keybourd_titel = tk.Label(root,text="KEYBOARD",font=14,bg="#1F1F1F",fg="gray")
 keybourd_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
 keybourd_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 keybourd_port_entery.bind("<Enter>", lambda event: on_hover(event, 760, 350))
