@@ -33,7 +33,7 @@ monitor_count = len(screeninfo.get_monitors())
 
 hover = False
 STATE = True
-
+ip_show = False
 time_hover = time.time() + 1
 
 resiving_FPS = 0
@@ -564,6 +564,20 @@ def out_hover(event):
 page = -5
 array_page = [-5]
 
+
+
+def ip_button_click(event):
+    global ip_show, host
+    your_ip.config(text=f"YOUR IP:{host}",bg="green")
+def ip_button_hover(event):
+    image_ip_button.config(image=IP2_load)
+    
+
+def ip_button_out_hover(event):
+    image_ip_button.config(image=IP_load)
+    your_ip.config(text=f"YOUR IP:   CLICK >>",bg="#E4AD3B")
+
+
 def question_window(number):
     if question.state == False:
         question.main(number)
@@ -588,6 +602,7 @@ def advacned_mode_shift():
         window_advance()
     else:
         page = -5
+        array_page.append(page)
         window1()
 
 def window_page_back(event):
@@ -793,6 +808,7 @@ def window1():
     if page == -4:
         image_background_page2.place(x=0,y=0)
         your_ip.place(x=105,y=0)
+        image_ip_button.place(x=279,y=0)
         keybourd_titel.place(x=40,y=60)
         image_qusetion_general_page.place(x=385,y=5)
         if Kdetection_state == True:
@@ -809,6 +825,7 @@ def window1():
     if page == -3:
         image_background_page2.place(x=0,y=0)
         your_ip.place(x=105,y=0)
+        image_ip_button.place(x=279,y=0)
         mouse_titel.place(x=40+15,y=60)
         image_qusetion_general_page.place(x=385,y=5)
         if Mdetection_state == True:
@@ -829,6 +846,7 @@ def window1():
     if page == -2:
         image_background_page2.place(x=0,y=0)
         your_ip.place(x=105,y=0)
+        image_ip_button.place(x=279,y=0)
         display_titel.place(x=40+15,y=60)
         image_qusetion_general_page.place(x=385,y=5)
         if display_detector_state == True:
@@ -886,6 +904,7 @@ def window1():
         image_background_page_general.place(x=0,y=0)
         keybourd_titel.place(x=40,y=60)
         your_ip.place(x=105,y=0)
+        image_ip_button.place(x=279,y=0)
         keybourd_port_label.place(x=75,y=110)
         keybourd_port_entery.place(x=75,y=140)
         keybourd_detection_button.place(x=75,y=250)
@@ -911,6 +930,7 @@ def window1():
         image_background_page_general.place(x=0,y=0)
         mouse_titel.place(x=40+15,y=60)
         your_ip.place(x=105,y=0)
+        image_ip_button.place(x=279,y=0)
         mouse_port_label.place(x=75,y=110)
         mouse_port_entery.place(x=75,y=140)
         mouse_detection_button.place(x=75,y=250)
@@ -938,6 +958,7 @@ def window1():
         image_background_page_general.place(x=0,y=0)
         display_titel.place(x=40+15,y=60)
         your_ip.place(x=105,y=0)
+        image_ip_button.place(x=279,y=0)
         display_port_label.place(x=75,y=110)
         display_port_entery.place(x=75,y=140)
         display_thread_label.place(x=1000-925,y=200)
@@ -977,6 +998,7 @@ def window_advance():
     ##general
     image_background.place(x=0,y=0)
     your_ip.place(x=540,y=0)
+    image_ip_button.place(x=714,y=0)
     ip_label.place(x=520,y=110)
     ip_postion_enterys = (520,140)
     ip1.place(x=ip_postion_enterys[0]+60*0, y=ip_postion_enterys[1])
@@ -1060,7 +1082,7 @@ image_background_page_general = tk.Label(root, image=background_page_general, hi
 
 ##general
 
-your_ip = tk.Label(root,text=f"YOUR IP:{host}",font=18,bg="#E4AD3B",fg="#1F1F1F")
+your_ip = tk.Label(root,text=f"YOUR IP:   CLICK >>",font=18,bg="#E4AD3B",fg="#1F1F1F")
 ip_label = tk.Label(root,text = f"IP:CLIENT",font=14,bg="#1F1F1F",fg="gray") 
 ip1 = tk.Entry(root, width=4, font=('Arial', 14))
 ip1.bind("<Enter>", lambda event: on_hover(event, 760, 90))
@@ -1079,7 +1101,7 @@ fps_counter_in = tk.Label(root,text=f"FPS:{resiving_FPS}",font=14,bg="#1F1F1F",f
 fps_counter_out = tk.Label(root,text=f"FPS:{sendeing_FPS}",font=14,bg="#1F1F1F",fg="gray")
 ###mouse
 mouse_titel = tk.Label(root,text="MOUSE",font=14,bg="#1F1F1F",fg="gray")
-mouse_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
+mouse_port_label = tk.Label(root,text="PORT:  MATCHING",font=14,bg="#1F1F1F",fg="gray")
 mouse_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 mouse_port_entery.bind("<Enter>", lambda event: on_hover(event, 290, 350))
 mouse_port_entery.bind("<Leave>", out_hover)
@@ -1101,7 +1123,7 @@ mouse_page_control = tk.Button(root,text="SEND",width=18,height=0,bg="gray",comm
 
 ##keybourd
 keybourd_titel = tk.Label(root,text="KEYBOARD",font=14,bg="#1F1F1F",fg="gray")
-keybourd_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
+keybourd_port_label = tk.Label(root,text="PORT:  MATCHING",font=14,bg="#1F1F1F",fg="gray")
 keybourd_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 keybourd_port_entery.bind("<Enter>", lambda event: on_hover(event, 760, 350))
 keybourd_port_entery.bind("<Leave>", out_hover)
@@ -1121,7 +1143,7 @@ keybourd_page_control = tk.Button(root,text="SEND",width=18,height=0,bg="gray",c
 
 ##display
 display_titel = tk.Label(root,text="DISPLAY",font=14,bg="#1F1F1F",fg="gray")
-display_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
+display_port_label = tk.Label(root,text="PORT:  MATCHING",font=14,bg="#1F1F1F",fg="gray")
 display_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 display_port_entery.bind("<Enter>", lambda event: on_hover(event, 960, 350))
 display_port_entery.bind("<Leave>", out_hover)
@@ -1173,10 +1195,15 @@ back_button = ImageTk.PhotoImage(Image.open("images/backbutton.png").resize((int
 back_button1 = ImageTk.PhotoImage(Image.open("images/backbutton2.png").resize((int(30),int(30))))
 qusetion = ImageTk.PhotoImage(Image.open("images/qusetion.png").resize((int(10),int(15))))
 qusetion2 = ImageTk.PhotoImage(Image.open("images/qusetion2.png").resize((int(10),int(15))))
+IP_load = ImageTk.PhotoImage(Image.open("images/IP_1.png").resize((int(25),int(24))))
+IP2_load = ImageTk.PhotoImage(Image.open("images/IP_2.png").resize((int(25),int(24))))
 
 
 
-
+image_ip_button = tk.Label(root, image=IP_load, highlightthickness=0, bd=0)
+image_ip_button.bind("<Enter>",ip_button_hover)
+image_ip_button.bind("<Leave>",ip_button_out_hover)
+image_ip_button.bind("<ButtonRelease-1>",ip_button_click)
 
 
 image_panal = tk.Label(root, image=pannal, highlightthickness=0, bd=0)
@@ -1330,8 +1357,6 @@ how much prefomence is being used.""",bg="#323232",fg="yellow",anchor='e', justi
 display_theads_message = tk.Label(text="""theads that are used to detect the image and display the image
 on the screen the more the theads these is the less the latency
 and the higher the FPS.""",bg="#323232",fg="yellow",anchor='e', justify='left')
-
-
 
 
 
