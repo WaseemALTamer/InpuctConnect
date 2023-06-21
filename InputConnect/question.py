@@ -12,7 +12,7 @@ def quiter():
     window.destroy()
 
 def main(number):
-    global window, state, fill
+    global window, state
     state = True
     window = tk.Toplevel()
     window.resizable(width=False, height=False)

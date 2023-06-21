@@ -20,6 +20,7 @@ import time
 import Mshift
 import pystray
 import question
+import setupmonitor
 
 
 
@@ -73,6 +74,10 @@ def hide_window():
         pass
     try:
         keyabsorber.quiter()
+    except:
+        pass
+    try:
+        setupmonitor.quiter()
     except:
         pass
     root.withdraw()
@@ -565,6 +570,13 @@ page = -5
 array_page = [-5]
 
 
+def Vmointor_setup():
+    if setupmonitor.state == False:
+        setupmonitor.main()
+    else:
+        setupmonitor.quiter()
+        setupmonitor.main()
+
 
 def ip_button_click(event):
     global ip_show, host
@@ -594,6 +606,10 @@ def advacned_mode_shift():
     except:
         pass
     try:
+        setupmonitor.quiter()
+    except:
+        pass
+    try:
         keyabsorber.quiter()
     except:
         pass
@@ -609,6 +625,10 @@ def window_page_back(event):
     global page, array_page
     try:
         question.quiter()
+    except:
+        pass
+    try:
+        setupmonitor.quiter()
     except:
         pass
     try:
@@ -857,6 +877,7 @@ def window1():
             display_page_resive.place(x=50,y=100+150)
             display_page_sender.place(x=140,y=140+200)
         image_back_button.place(x=3,y=3)
+        display_V_Moniotr_button.place(x=250,y=570)
         
 
     if page == -1:
@@ -1046,7 +1067,7 @@ def window_advance():
     display_monitor_button_backward.place(x=1110,y=430+35-5)
     display_monitor_button_forward.place(x=1170,y=430+35-5)
     display_monitor_target_label.place(x=1135,y=425+35-5)
-    
+    display_V_Moniotr_button.place(x=990,y=335)
     image_qusetion_ip.place(x=735,y=115)
     image_qusetion_mouse.place(x=270,y=300)
     image_qusetion_keybourd.place(x=740,y=300)
@@ -1184,6 +1205,8 @@ display_monitor_target_label = tk.Label(root,text=f"{display_monitor_target}",fo
 display_page_resive = tk.Button(root,text="RECEIVE",width=18,height=0,bg="gray",command=display_resiver_page)
 display_page_sender = tk.Button(root,text="SEND",width=18,height=0,bg="gray",command=display_sender_page)
 
+display_V_Moniotr_button = tk.Button(root,text="V-Monitor",width=18,height=0,bg="gray",command=Vmointor_setup)
+
 
 ##hovering
 pannal = ImageTk.PhotoImage(Image.open("images/pannal.png").resize((int(1283/3),int(722/3))))
@@ -1284,7 +1307,7 @@ image_back_button.bind("<Enter>", back_button_fun1)
 image_back_button.bind("<Leave>", back_button_fun2)
 advanced_mode_checkbox = tk.Checkbutton(root,text="ADVANCED MODE",bg="#1F1F1F",fg="gray",selectcolor="#1F1F1F",activeforeground="gray",command=advacned_mode_shift)
 
-connect_titel = tk.Label(root,text="CONNECT AND CONTROL",font=18,bg="#1F1F1F",fg="gray")
+connect_titel = tk.Label(root,text="DETECT OR CONTROL",font=18,bg="#1F1F1F",fg="gray")
 connect_processes_lable = tk.Label(root,text="PROCESSES",font=18,bg="#1F1F1F",fg="gray")
 connect_processes_button = tk.Button(root,text="PROCESSES",width=18,height=0,bg="yellow",command=window_page_0)
 connect_keybourd_button = tk.Button(root,text="SETUP",width=18,height=0,bg="gray",command=window_page_setup_keybourd)
