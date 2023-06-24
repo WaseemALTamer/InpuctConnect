@@ -1,3 +1,4 @@
-import subprocess
+import os
 
-subprocess.Popen('control desk.cpl')
+documents_path = os.path.expanduser("~/Documents")
+print(documents_path)

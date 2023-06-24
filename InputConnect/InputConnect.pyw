@@ -21,6 +21,7 @@ import Mshift
 import pystray
 import question
 import setupmonitor
+import os
 
 
 
@@ -31,7 +32,7 @@ root.resizable(width=False, height=False)
 root.configure(bg="#1F1F1F")
 host = socket.gethostbyname(socket.gethostname())
 monitor_count = len(screeninfo.get_monitors())
-
+documents_path = os.path.expanduser("~/Documents")
 hover = False
 STATE = True
 ip_show = False
@@ -56,6 +57,7 @@ display_detector_state = False
 def quit_window(icon, item):
     icon.stop()
     root.destroy()
+    quit()
 
 
 def show_window(icon, item):
@@ -68,23 +70,16 @@ def item_lunch_absorber(icon, item):
     #keyabsorber.main(Mcontroller_state)
 
 def hide_window():
-    try:
-        question.quiter()
-    except:
-        pass
-    try:
-        keyabsorber.quiter()
-    except:
-        pass
-    try:
-        setupmonitor.quiter()
-    except:
-        pass
+    global Kdetection_state, Kcontroller_state, Mcontroller_state, Mdetection_state, display_sender_state, display_detector_state
+    close_windows()
     root.withdraw()
-    image = Image.open("images/icone.ico")
-    menu = (item('Show', show_window),item('Quit', quit_window))
-    icon = pystray.Icon("InputConnect", image, "InputConnect", menu)
-    icon.run()
+    if detectorH.state == True or senderH.state == True or Kdetection_state == True or Kcontroller_state == True or Mcontroller_state == True or Mdetection_state == True or display_sender_state == True or display_detector_state == True:
+        image = Image.open("images/icone.ico")
+        menu = (item('Show', show_window),item('Quit', quit_window))
+        icon = pystray.Icon("InputConnect", image, "InputConnect", menu)
+        icon.run()
+    else:
+        quit()
 
 
 def clear_window(window):
@@ -187,8 +182,10 @@ def lunch_mouse_detector():
         if page > 0:
             page = -5
             array_page.append(page)
+            close_windows()
             window1()
         if page <= 0:
+            close_windows()
             window1()
     if Mdetection_state == True:
         mouse_detection_button.configure(text="STOP" ,bg="red")
@@ -209,8 +206,10 @@ def lunch_mouse_controller():
         if page > 0:
             page = -5
             array_page.append(page)
+            close_windows()
             window1()
         if page <= 0:
+            close_windows()
             window1()
     if Mcontroller_state == True:
         mouse_controller_button.configure(text="STOP" ,bg="red")
@@ -231,8 +230,10 @@ def lunch_keybourd_detector():
         if page > 0:
             page = -5
             array_page.append(page)
+            close_windows()           
             window1()
         if page <= 0:
+            close_windows()
             window1()
     if Kdetection_state == True:
         keybourd_detection_button.configure(text="STOP" ,bg="red")
@@ -253,8 +254,10 @@ def lunch_keybourd_controller():
         if page > 0:
             page = -5
             array_page.append(page)
+            close_windows()
             window1()
         if page <= 0:
+            close_windows()
             window1()
     if Kcontroller_state == True:
         keybourd_controller_button.configure(text="STOP" ,bg="red")
@@ -276,8 +279,10 @@ def lunch_display_detector():
         if page > 0:
             page = -5
             array_page.append(page)
+            close_windows()
             window1()
         if page <= 0:
+            close_windows()
             window1()
     if display_detector_state == True:
         display_detection_button.configure(text="STOP",bg="red")
@@ -301,11 +306,12 @@ def lunch_display_sender():
     threading.Thread(target=display_sender).start()
     if page != 100:
         if page > 0:
-            page = -5
-            array_page.append(page)
+            close_windows()
             window1()
         if page <= 0:
+            close_windows()
             window1()
+
     if display_sender_state == True:
         display_controller_button.configure(text="STOP",bg="red")
     else:
@@ -341,7 +347,7 @@ def mouse_shifter():
         Mshift.main()
     if Mshift.state == True:
         return None
-        
+
 
 def display_thead_increase():
     global display_theads_count
@@ -597,10 +603,7 @@ def question_window(number):
         question.quiter()
         question.main(number)
 
-
-
-def advacned_mode_shift():
-    global page, array_page
+def close_windows():
     try:
         question.quiter()
     except:
@@ -613,6 +616,10 @@ def advacned_mode_shift():
         keyabsorber.quiter()
     except:
         pass
+
+def advacned_mode_shift():
+    global page, array_page
+    close_windows()
     if page >= -5 and page != 100:
         page = 100
         window_advance()
@@ -623,18 +630,7 @@ def advacned_mode_shift():
 
 def window_page_back(event):
     global page, array_page
-    try:
-        question.quiter()
-    except:
-        pass
-    try:
-        setupmonitor.quiter()
-    except:
-        pass
-    try:
-        keyabsorber.quiter()
-    except:
-        pass
+    close_windows()
     array_page = array_page[:-1]
     page = array_page[-1]
     if Mshift.state == True:
@@ -645,66 +641,77 @@ def window_page_0():
     global page, array_page
     page = 0
     array_page.append(page)
+    close_windows()
     window1()
 
 def window_page_start():
     global page, array_page
     page = -5
     array_page.append(page)
+    close_windows()
     window1()
 
 def window_page_setup_keybourd():
     global page, array_page
     page = -4
     array_page.append(page)
+    close_windows()
     window1()
 
 def window_page_setup_mouse():
     global page, array_page
     page = -3
     array_page.append(page)
+    close_windows()
     window1()
 
 def window_page_setup_display():
     global page, array_page
     page = -2
     array_page.append(page)
+    close_windows()
     window1()
 
 def keybourd_detection_page():
     global page, array_page
     page = 1
     array_page.append(page)
+    close_windows()
     window1()
     
 def keybourd_controller_page():
     global page, array_page
     page = 2
     array_page.append(page)
+    close_windows()
     window1()
 
 def mouse_detection_page():
     global page, array_page
     page = 3
     array_page.append(page)
+    close_windows()
     window1()
     
 def mouse_controller_page():
     global page, array_page
     page = 4
     array_page.append(page)
+    close_windows()
     window1()
 
 def display_resiver_page():
     global page, array_page
     page = 5
     array_page.append(page)
+    close_windows()
     window1()
 
 def display_sender_page():
     global page, array_page
     page = 6
     array_page.append(page)
+    close_windows()
     window1()
 
 
@@ -767,6 +774,7 @@ def qusetion__hover_exit(argument):
 
 
 def save_on_text():
+    global documents_path
     temp = []
     temp.append(ip1.get())
     temp.append(ip2.get())
@@ -776,7 +784,7 @@ def save_on_text():
     temp.append(keybourd_port_entery.get())
     temp.append(display_port_entery.get())
     try:
-        with open("config.txt","w") as file:
+        with open(f"{documents_path}\InputConnect\Config.txt","w") as file:
             for i in range(0,len(temp)):
                 file.write(str(temp[i]) + "\n")
     except:
@@ -828,8 +836,8 @@ def window1():
     if page == -4:
         image_background_page2.place(x=0,y=0)
         your_ip.place(x=105,y=0)
-        image_ip_button.place(x=279,y=0)
-        keybourd_titel.place(x=40,y=60)
+        image_ip_button.place(x=320,y=0)
+        keybourd_titel.place(x=34,y=60)
         image_qusetion_general_page.place(x=385,y=5)
         if Kdetection_state == True:
             keybourd_detection_button.place(x=140,y=100+200)
@@ -845,7 +853,7 @@ def window1():
     if page == -3:
         image_background_page2.place(x=0,y=0)
         your_ip.place(x=105,y=0)
-        image_ip_button.place(x=279,y=0)
+        image_ip_button.place(x=320,y=0)
         mouse_titel.place(x=40+15,y=60)
         image_qusetion_general_page.place(x=385,y=5)
         if Mdetection_state == True:
@@ -866,7 +874,7 @@ def window1():
     if page == -2:
         image_background_page2.place(x=0,y=0)
         your_ip.place(x=105,y=0)
-        image_ip_button.place(x=279,y=0)
+        image_ip_button.place(x=320,y=0)
         display_titel.place(x=40+15,y=60)
         image_qusetion_general_page.place(x=385,y=5)
         if display_detector_state == True:
@@ -877,7 +885,7 @@ def window1():
             display_page_resive.place(x=50,y=100+150)
             display_page_sender.place(x=140,y=140+200)
         image_back_button.place(x=3,y=3)
-        display_V_Moniotr_button.place(x=250,y=570)
+        display_V_Moniotr_button.place(x=230,y=550)
         
 
     if page == -1:
@@ -923,9 +931,9 @@ def window1():
 
     if page == 1:
         image_background_page_general.place(x=0,y=0)
-        keybourd_titel.place(x=40,y=60)
+        keybourd_titel.place(x=34,y=60)
         your_ip.place(x=105,y=0)
-        image_ip_button.place(x=279,y=0)
+        image_ip_button.place(x=320,y=0)
         keybourd_port_label.place(x=75,y=110)
         keybourd_port_entery.place(x=75,y=140)
         keybourd_detection_button.place(x=75,y=250)
@@ -934,7 +942,7 @@ def window1():
 
     if page == 2:
         image_background_page_general.place(x=0,y=0)
-        keybourd_titel.place(x=40,y=60)
+        keybourd_titel.place(x=34,y=60)
         ip_label.place(x=75,y=110)
         ip_postion_enterys = (75,140)
         ip1.place(x=ip_postion_enterys[0]+60*0, y=ip_postion_enterys[1])
@@ -951,7 +959,7 @@ def window1():
         image_background_page_general.place(x=0,y=0)
         mouse_titel.place(x=40+15,y=60)
         your_ip.place(x=105,y=0)
-        image_ip_button.place(x=279,y=0)
+        image_ip_button.place(x=320,y=0)
         mouse_port_label.place(x=75,y=110)
         mouse_port_entery.place(x=75,y=140)
         mouse_detection_button.place(x=75,y=250)
@@ -979,7 +987,7 @@ def window1():
         image_background_page_general.place(x=0,y=0)
         display_titel.place(x=40+15,y=60)
         your_ip.place(x=105,y=0)
-        image_ip_button.place(x=279,y=0)
+        image_ip_button.place(x=320,y=0)
         display_port_label.place(x=75,y=110)
         display_port_entery.place(x=75,y=140)
         display_thread_label.place(x=1000-925,y=200)
@@ -1019,7 +1027,7 @@ def window_advance():
     ##general
     image_background.place(x=0,y=0)
     your_ip.place(x=540,y=0)
-    image_ip_button.place(x=714,y=0)
+    image_ip_button.place(x=750,y=0)
     ip_label.place(x=520,y=110)
     ip_postion_enterys = (520,140)
     ip1.place(x=ip_postion_enterys[0]+60*0, y=ip_postion_enterys[1])
@@ -1122,7 +1130,7 @@ fps_counter_in = tk.Label(root,text=f"FPS:{resiving_FPS}",font=14,bg="#1F1F1F",f
 fps_counter_out = tk.Label(root,text=f"FPS:{sendeing_FPS}",font=14,bg="#1F1F1F",fg="gray")
 ###mouse
 mouse_titel = tk.Label(root,text="MOUSE",font=14,bg="#1F1F1F",fg="gray")
-mouse_port_label = tk.Label(root,text="PORT:  MATCHING",font=14,bg="#1F1F1F",fg="gray")
+mouse_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
 mouse_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 mouse_port_entery.bind("<Enter>", lambda event: on_hover(event, 290, 350))
 mouse_port_entery.bind("<Leave>", out_hover)
@@ -1144,7 +1152,7 @@ mouse_page_control = tk.Button(root,text="SEND",width=18,height=0,bg="gray",comm
 
 ##keybourd
 keybourd_titel = tk.Label(root,text="KEYBOARD",font=14,bg="#1F1F1F",fg="gray")
-keybourd_port_label = tk.Label(root,text="PORT:  MATCHING",font=14,bg="#1F1F1F",fg="gray")
+keybourd_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
 keybourd_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 keybourd_port_entery.bind("<Enter>", lambda event: on_hover(event, 760, 350))
 keybourd_port_entery.bind("<Leave>", out_hover)
@@ -1164,7 +1172,7 @@ keybourd_page_control = tk.Button(root,text="SEND",width=18,height=0,bg="gray",c
 
 ##display
 display_titel = tk.Label(root,text="DISPLAY",font=14,bg="#1F1F1F",fg="gray")
-display_port_label = tk.Label(root,text="PORT:  MATCHING",font=14,bg="#1F1F1F",fg="gray")
+display_port_label = tk.Label(root,text="PORT:",font=14,bg="#1F1F1F",fg="gray")
 display_port_entery = tk.Entry(root,width=17,font=("Arial", 14))
 display_port_entery.bind("<Enter>", lambda event: on_hover(event, 960, 350))
 display_port_entery.bind("<Leave>", out_hover)
@@ -1320,7 +1328,10 @@ connect_display_button = tk.Button(root,text="SETUP",width=18,height=0,bg="gray"
 
 
 try:
-    with open("config.txt", "r") as file:
+    folder_path = f"{documents_path}\InputConnect"
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    with open(f"{documents_path}\InputConnect\Config.txt", "r") as file:
         lines = file.readlines()
         lines = [line.strip() for line in lines]
     ip1.insert(tk.END, str(lines[0]))

@@ -10,7 +10,7 @@ import webbrowser
 
 global state
 state = False
-
+restart_required = False
 
 def quiter():
     global state
@@ -18,24 +18,37 @@ def quiter():
     window.destroy()
 
 
-def add_mon():
-    threading.Thread(target=Vmonitor.add,args=(1,)).start()
+def download():
+    global restart_required
+    webbrowser.open('https://www.amyuni.com/downloads/usbmmidd_v2.zip')
+    restart_required = True
 
 def remove_mon():
+    global restart_required
     threading.Thread(target=Vmonitor.add,args=(-1,)).start()
+    restart.place(x=5,y=275)
+    restart_required = True
 
 def setting_open():
-    subprocess.Popen('control desk.cpl')
-
+    global restart_required
+    subprocess.Popen("control desk.cpl")
+    restart_required = True
+    restart.place(x=5,y=400)
 def link_hover(event):
     link.config(fg="dark blue")
+
 def link_out(event):
     link.config(fg="light blue")
+
 def open_link(event):
     webbrowser.open('https://www.youtube.com/watch?v=ybHKFZjSkVY')
+    restart.place(x=5,y=400)
+
+
+
 
 def main():
-    global window, state,link
+    global window, state, link, restart
     state = True
     window = tk.Toplevel()
     window.resizable(width=False, height=False)
@@ -43,23 +56,23 @@ def main():
     window.iconbitmap("images/icone.ico")
     window.geometry("400x600")
     window.configure(bg='#232323')
-
     background = ImageTk.PhotoImage(Image.open("images/VMo.png").resize((int(400),int(600))))
     image_background = tk.Label(window, image=background, highlightthickness=0, bd=0)
     image_background.place(x=0,y=0)
     link = tk.Label(window,text="https://www.youtube.com/watch?v=ybHKFZjSkVY",bg="#323232",fg="light blue")
+    restart = tk.Label(window,text="""Restart you app to detect the changes if you did not do anything then
+    ignore this message!""",bg="dark red",fg="black")
     link.bind("<ButtonRelease-1>", open_link)
     link.bind("<Enter>", link_hover)
     link.bind("<Leave>", link_out)
-
-
     titel = tk.Label(window,text="VIRTUAL MONITOR",font=30)
-    add_mon_button = tk.Button(window,text="ADD DISPLAY",width=24,height=0,bg="gray",command=add_mon)
-    remove_mon_button = tk.Button(window,text="REMOVE DISPLAY",width=24,height=0,bg="gray",command=remove_mon)
+    download_button = tk.Button(window,text="Download Files",width=24,height=0,bg="gray",command=download)
     setting = tk.Button(window,text="Setting",width=18,height=0,bg="gray",command=setting_open)
-    link.place(x=10,y=550)
+    
     titel.place(x=120,y=0)
-    add_mon_button.place(x=50,y=100)
-    remove_mon_button.place(x=90,y=150)
-    setting.place(x=160,y=200)
+    link.place(x=10,y=300)
+    download_button.place(x=50,y=120)
+    setting.place(x=70,y=560)
+    
+    
     window.mainloop()
