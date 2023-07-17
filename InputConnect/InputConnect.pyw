@@ -790,14 +790,20 @@ def save_on_text():
     except:
         pass
 
-
-
+def refresher():
+    global host, monitor_count
+    while True:
+        try:
+            host = socket.gethostbyname(socket.gethostname())
+            monitor_count = len(screeninfo.get_monitors())
+            time.sleep(1)
+        except:
+            time.sleep(1)
 def window1():
     global page,Kdetection_state ,Kcontroller_state, Mcontroller_state ,Mdetection_state ,display_detector_state , display_sender_state, monitor_count
     clear_window(root)
     root.geometry("400x600")
     advanced_mode_checkbox.place(x=0,y=570)
-    
     
     if page == -5:
         image_background_page5.place(x=0,y=0)
@@ -1184,7 +1190,7 @@ display_controller_button = tk.Button(root,text="SEND",width=24,height=0,bg="gra
 display_controller_button.bind("<Enter>", lambda event: on_hover(event, 960, 430))
 display_controller_button.bind("<Leave>", out_hover)
 display_thread_label = tk.Label(root,text="THREADS",font=14,bg="#1F1F1F",fg="purple3")
-display_theads_count = 1
+display_theads_count = 3
 display_theads_left = tk.Button(root,text="<",command=display_thead_decrease,bg="gray")
 display_theads_right = tk.Button(root,text=">",command=display_thead_increase,bg="gray")
 display_theads_count_label = tk.Label(root,text=f"{display_theads_count}",font=("Arial", 18),bg="#1F1F1F",fg="green")
@@ -1396,8 +1402,9 @@ and the higher the FPS.""",bg="#323232",fg="yellow",anchor='e', justify='left')
 
 window1()
 
-
 root.protocol('WM_DELETE_WINDOW', hide_window)
+threading.Thread(target=refresher).start()
+
 
 root.mainloop()
 
